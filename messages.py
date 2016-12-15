@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 """
 messages.py
-List of messages for LIFX HTTP control
+List of messages and codes for LIFX HTTP control
 
 Created by Jeremy Smith on 2016-12-12
 j.smith.03@cantab.net

@@ -22,6 +22,10 @@ def main():
 
 	token = cfg['apisecret']['token']
 
+	mylights = pylifx.LifxObject(token)
+
+	mylights.list_lights()
+	#mylights.toggle_power()
 
 	return
 

@@ -1,7 +1,7 @@
 // Blocking example
 var fs = require("fs");
 
-var data = fs.readFileSync("token");
+var data = fs.readFileSync("file");
 
 console.log(data.toString());
 console.log("END");
@@ -12,5 +12,5 @@ function callback(err, data){
 	console.log(data.toString());
 }
 
-fs.readFile("token", callback);
+fs.readFile("file", callback);
 console.log("END");
