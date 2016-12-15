@@ -21,13 +21,7 @@ def main():
 		cfg = yaml.load(configfile)
 
 	token = cfg['apisecret']['token']
-	headers = {"Authorization": "Bearer {:s}".format(token)}
 
-	selector = "all"
-
-	url = "https://api.lifx.com/v1/lights/{:s}/toggle".format(selector)
-
-	response = requests.post(url, headers=headers)
 
 	return
 
