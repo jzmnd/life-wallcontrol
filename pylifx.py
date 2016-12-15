@@ -36,7 +36,7 @@ def parseJSONresponse(response, disp=True):
 	if disp:
 		print json.dumps(data, indent=4, sort_keys=True)
 
-	return status, data, headers, nlights
+	return {'status': status, 'data': data, 'headers': headers, 'nlights': nlights}
 
 
 class LifxObject():
