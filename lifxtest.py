@@ -25,7 +25,7 @@ def main():
 	mylights = pylifx.LifxObject(token)
 
 	mylights.list_lights()
-	#mylights.toggle_power()
+	mylights.toggle_power()
 
 	return
 
