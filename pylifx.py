@@ -45,35 +45,42 @@ class LifxObject():
 		self.apitoken = apitoken
 		self.headers = {"Authorization": "Bearer {:s}".format(apitoken)}
 		self.base_url = "https://api.lifx.com/v1/"
-		self.lights = None
-		self.scenes = None
+		self.current_lights = None
+		self.current_scenes = None
 
 	def list_lights(self, selector='all'):
 		response = requests.get('{:s}lights/{:s}'.format(self.base_url, selector), headers=self.headers)
 		parsed_response = parseJSONresponse(response)
-		self.lights = parsed_response
+		self.current_lights = parsed_response
+		return parsed_response
+
+	def set_state(self, selector='all', power='on', color=None, brightness=None, duration=None):
+		d = {'power': power, 'color': color, 'brightness': brightness, 'duration': duration}
+		data = {k: d[k] for k in d if d[k] is not None}
+		response = requests.put('{:s}lights/{:s}/state'.format(self.base_url, selector), data=data, headers=self.headers)
+		parsed_response = parseJSONresponse(response)
 		return parsed_response
 
 	def set_states(self, states):
 		data = json.dumps(states)
 		response = requests.put('{:s}lights/states'.format(self.base_url), data=data, headers=self.headers)
 		parsed_response = parseJSONresponse(response)
-		return response
+		return parsed_response
 
 	def toggle_power(self, selector='all', duration='1'):
-		data = {"duration": duration}
+		data = {'duration': duration}
 		response = requests.post('{:s}lights/{:s}/toggle'.format(self.base_url, selector), data=data, headers=self.headers)
 		parsed_response = parseJSONresponse(response)
-		return response
+		return parsed_response
 
 	def list_scenes(self):
 		response = requests.get('{:s}scenes'.format(self.base_url), headers=headers)
 		parsed_response = parseJSONresponse(response)
-		self.scenes = parsed_response
-		return response
+		self.current_scenes = parsed_response
+		return parsed_response
 
 	def activate_scene(self, scene_id, duration='1'):
-		data = {"duration": duration}
+		data = {'duration': duration}
 		response = requests.put('{:s}scenes/scene_id:{:s}/activate'.format(self.base_url, scene_id), data=data, headers=self.headers)
 		parsed_response = parseJSONresponse(response)
-		return response
+		return parsed_response

@@ -1,0 +1,19 @@
+extends layout
+
+block title
+  | Home Dashboard Control
+
+block content
+  div.gridster
+    ul
+      li(data-row='1', data-col='1', data-sizex='6', data-sizey='2')
+        div(data-id='welcome', data-view='Text', data-title='370 Orange Street #101 CA 94610', data-text='HOME AUTOMATION', style='background-color:#8ca3a3')
+
+      li(data-row='1', data-col='1', data-sizex='4', data-sizey='2')
+        div(data-id='time', data-view='Clock', style='background-color:#8ca3a3')
+
+      li(data-row='2', data-col='1', data-sizex='3', data-sizey='3')
+         div(data-id='weatherfaversham', data-view='Weather', style='background-color:#8ca3a3')
+
+      li(data-row='2', data-col='3', data-sizex='3', data-sizey='3')
+         div(data-id='weatheroakland', data-view='Weather', style='background-color:#8ca3a3')

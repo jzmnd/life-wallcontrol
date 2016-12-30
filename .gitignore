@@ -26,9 +26,15 @@ wheels/
 *.egg
 results/
 plots/
+IGNORE/
+assets/
 
 # DS Store
 .DS_Store
 
 # Config
 config.yml
+
+# Log files
+*.log
+
