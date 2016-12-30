@@ -28,6 +28,7 @@ results/
 plots/
 IGNORE/
 assets/
+dashboards/
 
 # DS Store
 .DS_Store
