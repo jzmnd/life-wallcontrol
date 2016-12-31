@@ -27,7 +27,6 @@ wheels/
 results/
 plots/
 IGNORE/
-assets/
 dashboards/
 
 # DS Store
@@ -38,4 +37,3 @@ config.yml
 
 # Log files
 *.log
-
