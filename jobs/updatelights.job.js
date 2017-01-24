@@ -6,9 +6,7 @@ function updateLights() {
     'device': 'switchalllights',
     'command': 'q',
     };
-  lifx.lifxControl(data, function(light) {
-    logger.info('Update LIFX status:', data.device);
-  });
+  lifx.lifxControl(data);
 };
 
 setInterval(updateLights, 60 * 1000);

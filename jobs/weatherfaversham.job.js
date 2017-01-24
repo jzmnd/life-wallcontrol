@@ -1,4 +1,5 @@
 var http = require('http');
+var logger = require('../logger.js');
 
 // WOEID for location
 var woeid = 19991;
@@ -29,10 +30,10 @@ function fetchWeather() {
         }
       });
     } else {
-      console.log('Yahoo Weather status code: ' + res.statusCode);
+      logger.info('Yahoo Weather status code: ' + res.statusCode);
     }
   }).on('error', function(err) {
-    console.log('Error reading from Yahoo Weather: ', err);
+    logger.error('Error reading from Yahoo Weather: ', err);
   });
 }
 
