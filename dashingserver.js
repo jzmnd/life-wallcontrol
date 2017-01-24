@@ -12,28 +12,18 @@ global.CONNECTIONS = {};
 var fs = require('fs');
 var path = require('path');
 var express = require('express');
+var bodyParser = require("body-parser");
 var mincer = require('mincer');
 var logger = require('./logger.js');
+var lifx = require('./lifx.js');
 
 module.exports.Dashing = Dashing;
 module.exports.logger = logger;
+module.exports.lifx = lifx;
+
 
 // Dashing class constructor
-function Dashing() {
-  // Define dashing constants
-  this.dashing = {
-    root: ROOTPATH,
-    port: process.env.PORT || 8080,
-    view_engine: process.env.VIEW_ENGINE || 'pug',
-    public_folder: ROOTPATH + '/public',
-    dashboard_folder: ROOTPATH + '/dashboards',
-    job_path: process.env.JOB_PATH || (ROOTPATH + '/jobs'),
-    default_dashboard: 'dashboard'
-  };
-
-  // Build the express app
-  this.app = express();
-  
+function Dashing() {  
   // Mincer environment setup
   var env = new mincer.Environment()
   env.appendPath(['assets', 'javascripts'].join(path.sep));
@@ -43,28 +33,40 @@ function Dashing() {
   env.appendPath('widgets');
   env.appendPath('javascripts');
 
-  this.mcr = {
+  var mcr = {
     assets_prefix: '/assets',
     environment: env,
   };
 
-  // Test variables for application.js and application.css
-  this.dashing.assetjs = this.mcr.environment.findAsset('application.js');
-  this.dashing.assetcss = this.mcr.environment.findAsset('application.css');
+  // Define dashing constants
+  this.dashing = {
+    root: ROOTPATH,
+    port: process.env.PORT || 8080,
+    view_engine: process.env.VIEW_ENGINE || 'pug',
+    public_folder: ROOTPATH + '/public',
+    dashboard_folder: ROOTPATH + '/dashboards',
+    job_path: process.env.JOB_PATH || (ROOTPATH + '/jobs'),
+    default_dashboard: 'dashboard',
+    assetjs: mcr.environment.findAsset('application.js'),
+    assetcss: mcr.environment.findAsset('application.css'),
+    mcr: mcr
+  };
 };
+
 
 // Start server function
 Dashing.prototype.start = function() {
-  // Local
+  // Build the express app
+  var app = express();
+  // Localize this.dashing
   var self = this.dashing;
-  var app = this.app;
-
+  // Load utility functions
   require('./utils.js');
 
   // Mincer middleware
-  this.app.use(this.mcr.assets_prefix, mincer.createServer(this.mcr.environment));
+  app.use(self.mcr.assets_prefix, mincer.createServer(self.mcr.environment));
 
-  // Static folder and exress variables
+  // Static folder and express variables
   app.use(express.static(self.public_folder));
   app.set('view engine', self.view_engine);
   app.set('views', self.dashboard_folder);
@@ -72,6 +74,12 @@ Dashing.prototype.start = function() {
 
   // Logging middleware
   app.use(logger.logExpress);
+
+  // Body parser middleware for POST
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
+  app.use(bodyParser.json());
 
   // Routing homepage to default
   app.get('/', function(request, response, next) {
@@ -84,7 +92,14 @@ Dashing.prototype.start = function() {
 
   // Info page
   app.get('/info', function(request, response, next) {
-    response.end("Hello World\nHello Jane!!\nPath Hit: " + request.url);
+    response.write("Dashing Server");
+    response.write("\nURL  : " + request.url);
+    response.write("\nRoot : " + JSON.stringify(self.root));
+    response.write("\nPort : " + JSON.stringify(self.port));
+    response.write("\nView : " + JSON.stringify(self.view_engine));
+    response.write("\nJS   : " + JSON.stringify(self.assetjs.pathname));
+    response.write("\nCSS  : " + JSON.stringify(self.assetcss.pathname));
+    response.end();
   });
 
   // GET events
@@ -101,18 +116,18 @@ Dashing.prototype.start = function() {
     };
     CONNECTIONS[con.id] = con;
 
-    // Send headers for event-stream connection
     response.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive',
-      'X-Accel-Buffering': 'no' // Disable buffering for nginx
+      'X-Accel-Buffering': 'no'
     });
 
     response.write('\n');
     response.write(Array(2049).join(' ') + '\n'); // 2 kB padding
     response.write(latest_events());
 
+    // Delete connection once event stream is closed
     request.on('close', function(){
       delete CONNECTIONS[con.id];
     });
@@ -125,8 +140,8 @@ Dashing.prototype.start = function() {
     fs.stat(dashboardPath, function(err, stats){
       if (err == null) {
         response.render(dashboard, {
-          dashboard: dashboard,
-          request: request
+          'dashboard': dashboard,
+          'request': request
         });
       }else {
         next();
@@ -138,6 +153,32 @@ Dashing.prototype.start = function() {
   app.get('/views/:widget?.html', function(request, response) {
     var widget = request.params.widget;
     response.sendFile([self.root, 'widgets', widget, widget + '.html'].join(path.sep));
+  });
+
+  // GET and POST switch state
+  app.get('/switch/:device', function(request, response) {
+    var data = {
+      'device': request.params.device,
+      'command': 'q',
+    };
+    response.writeHead(200, {
+      'Content-Type': 'application/json',
+    });
+    lifx.lifxControl(data, function(light) {
+      logger.info('State queried and data received from LIFX:', data.device);
+      response.end(JSON.stringify(light));
+    });
+  });
+
+  app.post('/switch/:device/', function(request, response) {
+    var data = request.body;
+    response.writeHead(200, {
+      'Content-Type': 'application/json',
+    });
+    lifx.lifxControl(data, function(light) {
+      logger.info('Button pressed and data received from LIFX:', data.device);
+      response.end(JSON.stringify(light));
+    });
   });
 
   // 404 page
@@ -158,8 +199,8 @@ Dashing.prototype.start = function() {
       if (file.match(/(\w*)\.job\.(js|coffee)$/)) {
         logger.info("Loading job file: %s", files[i]);
         require(file);
-      }
-    }
+      };
+    };
   });
 
   // Listen

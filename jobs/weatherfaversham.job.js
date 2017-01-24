@@ -4,7 +4,7 @@ var http = require('http');
 var woeid = 19991;
 
 // Units for temperature (f: Fahrenheit, c: Celsius)
-var format = 'c';
+var format = 'f';
 var query = encodeURIComponent('select * from weather.forecast WHERE woeid=' + woeid + ' and u="' + format + '"');
 
 function fetchWeather() {

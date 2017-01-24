@@ -3,7 +3,7 @@ var path = require('path');
 var winston = require('winston');
 var expressWinston = require('express-winston');
 
-// Logger
+// Logger Middleware
 module.exports = winstonLog = new winston.Logger({
   transports: [
     new winston.transports.Console({

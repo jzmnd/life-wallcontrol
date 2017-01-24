@@ -17,7 +17,7 @@ __author__ = "Jeremy Smith"
 __version__ = "1.0"
 
 
-def parseJSONresponse(response, disp=True):
+def parseJSONresponse(response, disp=False):
 	"""Parses the JSON response"""
 	data = json.loads(response.text)
 	status = response.status_code

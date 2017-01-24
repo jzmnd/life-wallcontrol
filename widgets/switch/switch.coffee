@@ -6,7 +6,6 @@ class Dashing.Switch extends Dashing.ClickableWidget
   @accessor 'state',
     get: -> @_state ? 'Unknown'
     set: (key, value) -> @_state = value
-    
 
   @accessor 'icon',
     get: -> if @['icon'] then @['icon'] else
@@ -34,25 +33,23 @@ class Dashing.Switch extends Dashing.ClickableWidget
     path = '/switch/' + @get('device')
     $.get path,
       (data) =>
-        json = JSON.parse(data)
-        @set 'state', json.switch
-
+        @set 'state', data.state
 
 
   postState: ->
     @toggleState()
     path = '/switch/' + @get('device') + '/'
     $.post path,
-      deviceType: 'switch',
-      deviceId: @get('device'),
+      deviceType: 'Switch',
+      device: @get('device'),
       command: 't',
-      
+      state: @get('state'),
+
 
   ready: ->
 
   onData: (data) ->
-    @queryState()
+    @set 'state', data.state
 
   onClick: (event) ->
     @postState()
-

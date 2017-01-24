@@ -27,7 +27,7 @@ wheels/
 results/
 plots/
 IGNORE/
-dashboards/
+tests/
 
 # DS Store
 .DS_Store

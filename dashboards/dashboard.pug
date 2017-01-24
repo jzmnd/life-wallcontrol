@@ -1,0 +1,41 @@
+//- dashboard.pug
+extends layout
+
+block title
+  title Home Dashboard Control
+
+block content
+  div.gridster
+    ul
+      li(data-row='1', data-col='1', data-sizex='6', data-sizey='2')
+        div(data-id='welcome', data-view='Text', data-title="Home Name", data-text='Home Dashboard Control', style='background-color:#8ca3a3')
+
+      li(data-row='1', data-col='7', data-sizex='3', data-sizey='2')
+        div(data-id='time', data-view='Clock')
+
+      li(data-row='3', data-col='1', data-sizex='3', data-sizey='3')
+         div(data-id='weatherfaversham', data-view='Weather')
+
+      li(data-row='3', data-col='4', data-sizex='3', data-sizey='3')
+         div(data-id='weatheroakland', data-view='Weather')
+
+      li(data-row='3', data-col='7', data-sizex='3', data-sizey='3')
+         div(data-id='switchalllights', data-view='Switch', data-title='All lights', data-device='switchalllights', data-iconm='circle-o')
+
+      li(data-row='6', data-col='1', data-sizex='3', data-sizey='3')
+         div(data-id='switchfloorlamp', data-view='Switch', data-title='Floor lamp', data-device='switchfloorlamp', data-iconm='lightbulb-o')
+
+      li(data-row='6', data-col='4', data-sizex='3', data-sizey='3')
+         div(data-id='switchsmalllight', data-view='Switch', data-title='Small light', data-device='switchsmalllight', data-iconm='lightbulb-o')
+
+      li(data-row='6', data-col='7', data-sizex='3', data-sizey='3')
+         div(data-id='switchbedroomlight', data-view='Switch', data-title='Bedroom light', data-device='switchbedroomlight', data-iconm='lightbulb-o')
+
+      //- li(data-row='9', data-col='1', data-sizex='3', data-sizey='3')
+      //-    div(data-id='dimfloorlamp', data-view='Switch', data-title='Floor lamp', data-device='dimfloorlamp', data-iconm='dot-circle-o')
+
+      //- li(data-row='9', data-col='4', data-sizex='3', data-sizey='3')
+      //-    div(data-id='dimsmalllight', data-view='Switch', data-title='Small light', data-device='dimsmalllight', data-iconm='dot-circle-o')
+
+      //- li(data-row='9', data-col='7', data-sizex='3', data-sizey='3')
+      //-    div(data-id='dimbedroomlight', data-view='Switch', data-title='Bedroom light', data-device='dimbedroomlight', data-iconm='dot-circle-o')
