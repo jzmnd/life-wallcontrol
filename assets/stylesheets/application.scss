@@ -92,19 +92,19 @@ h1, h2, h3, h4, h5, p {
   margin: 0; 
 }
 h1 { 
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   text-align: center;
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 400;
 }
 h2 {
   text-transform: uppercase;
-  font-size: 56px;
+  font-size: 36px;
   font-weight: 700;
   color: $text-color;
 }
 h3 {
-  font-size: 25px;
+  font-size: 15px;
   font-weight: 600;
   color: $text-color;
 }
@@ -143,7 +143,7 @@ h3 {
 }
 
 .widget {
-  padding: 25px 12px;
+  padding: 15px 10px;
   text-align: center;
   width: 100%;
   display: table-cell;
@@ -179,7 +179,7 @@ h3 {
 }
 
 .more-info {
-  font-size: 15px;
+  font-size: 10px;
   position: absolute;
   bottom: 32px;
   left: 0;
@@ -187,9 +187,9 @@ h3 {
 }
 
 .updated-at {
-  font-size: 15px;
+  font-size: 10px;
   position: absolute;
-  bottom: 12px;
+  bottom: 10px;
   left: 0;
   right: 0;
 }
@@ -300,5 +300,3 @@ li[class^="icon-"]:before, li[class*=" icon-"]:before {
 li[class^="icon-"].icon-large:before, li[class*=" icon-"].icon-large:before {
   text-indent: -1.3333333333333333em;
 }
-
-

@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
-# Distribution / packaging /data
+# Distribution / packaging
 .Python
 env/
 build/
@@ -24,10 +24,16 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Data and tests
 results/
 plots/
 IGNORE/
 tests/
+
+# Node modules and dependencies
+node_modules/
+jspm_packages/
 
 # DS Store
 .DS_Store
@@ -37,3 +43,6 @@ config.yml
 
 # Log files
 *.log
+logs/
+npm-debug.log*
+
