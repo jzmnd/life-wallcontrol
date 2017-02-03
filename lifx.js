@@ -16,7 +16,6 @@ exports.lifxControl = function(data, callback) {
 
   // All lights control
   pylifx.stdout.on('end', function() {
-    logger.info(allLights);
     if (!allLights.forEach) {
       return;
     };
