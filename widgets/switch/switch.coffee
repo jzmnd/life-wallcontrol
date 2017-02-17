@@ -51,5 +51,5 @@ class Dashing.Switch extends Dashing.ClickableWidget
   onData: (data) ->
     @set 'state', data.state
 
-  onTouchStart: (event) ->
+  onClick: (event) ->
     @postState()
