@@ -3,3 +3,5 @@
 A node.js dashboard based on dashing-js for controlling LIFX lights.
 
 Python library uses the LIFX HTTP API.
+
+![Touch panel](/wall_mounted_panel.jpeg?raw=true)
