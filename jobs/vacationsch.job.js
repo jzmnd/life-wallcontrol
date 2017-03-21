@@ -2,39 +2,65 @@ var lifx = require('../lifx.js');
 var logger = require('../logger.js');
 var schedule = require('node-schedule');
 
-var timeA = {
-  'hour': 7,
-  'minute': 0
-};
-var timeB = {
-  'hour': 7,
-  'minute': 30
-};
-var timeC = {
-  'hour': 19,
-  'minute': 45
-};
-var timeD = {
-  'hour': 22,
-  'minute': 0
+var timeVar = 0;
+var jobs = {};
+
+var times = {
+  'timeAMon': {
+    'hour': 16,
+    'minute': 48,
+    'state': 'on'
+  },
+  'timeAMoff': {
+    'hour': 16,
+    'minute': 32,
+    'state': 'off'
+  },
+  'timePMon': {
+    'hour': 16,
+    'minute': 33,
+    'state': 'on'
+  },
+  'timePMoff': {
+    'hour': 16,
+    'minute': 34,
+    'state': 'off'
+  },
 };
 
 // Random integer plus or minus v
-function getRandom(v) {
+function setRandomMins(time, v) {
   v = Math.floor(Math.abs(v));
-  return Math.round(v * 2 * Math.random() - v);
-};
+  time.minute += Math.round(v * 2 * Math.random() - v);
+  if (time.minute > 59) {
+    if (time.hour !== 23) {
+      time.hour += 1;
+    }
+    time.minute -= 60;
+  }
+  if (time.minute < 0) {
+    if (time.hour !== 0) {
+      time.hour -= 1;
+    }
+    time.minute += 60;
+  }
+  return time;
+}
 
-// Toggles lights if vacation mode is set
-function vacationSchedule() {
-  var data = {
-    'device': 'switchalllights',
-    'command': 't',
-  };
-  lifx.lifxControl(data);
-};
+// Sets scheduled light changes
+for (var t in times) {
+  times[t] = setRandomMins(times[t], timeVar);
+  
+  times[t].command = 's';
+  times[t].device = 'switchalllights';
+  times[t].brightness = 1;
 
-//var jA = schedule.scheduleJob(timeA, vacationSchedule());
-//var jB = schedule.scheduleJob(timeB, vacationSchedule());
-//var jC = schedule.scheduleJob(timeC, vacationSchedule());
-//var jD = schedule.scheduleJob(timeD, vacationSchedule());
+  jobs[t] = schedule.scheduleJob(times[t], function(data) {
+    if (VACATIONMODE) {
+      logger.info("Scheduled vacation mode LIFX:", data.command, ":", data.device, "is", data.state);
+      lifx.lifxControl(data);
+    }else {
+      return;
+    }
+  }.bind(null, times[t]));
+}

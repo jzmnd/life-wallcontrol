@@ -56,11 +56,12 @@ def main():
 
 	# Set state command (s)
 	if dataIn['command'] == 's':
+		power = dataIn['state']
 		selector = device_names[dataIn['device']]
 		brightness = dataIn['brightness']
 		if selector != 'all':
 			selector = "label:{:s}".format(selector)
-		mylights.set_state(selector=selector, brightness=brightness)
+		mylights.set_state(power=power, selector=selector, brightness=brightness)
 		time.sleep(1)
 		lights = mylights.list_lights()
 

@@ -1,6 +1,6 @@
 // dashingserver.js
 // Jeremy Smith
-//   Date modified 2017-03-21
+// - Date modified 2017-03-21
 // Modified and updated from dashing-js by Fabio Caseri
 
 // Load global utility functions for eventsource
@@ -25,7 +25,7 @@ var ROOTPATH = __dirname;
 // Dashing class constructor
 function Dashing() {  
   // Mincer environment setup
-  var env = new mincer.Environment()
+  var env = new mincer.Environment();
   env.appendPath(['assets', 'javascripts'].join(path.sep));
   env.appendPath(['assets', 'stylesheets'].join(path.sep));
   env.appendPath(['assets', 'fonts'].join(path.sep));
@@ -51,7 +51,7 @@ function Dashing() {
     assetcss: mcr.environment.findAsset('application.css'),
     mcr: mcr
   };
-};
+}
 
 
 // Start server function
@@ -85,7 +85,7 @@ Dashing.prototype.start = function() {
       response.redirect(self.default_dashboard);
     }else {
       next();
-    };
+    }
   });
 
   // Info page
@@ -136,14 +136,14 @@ Dashing.prototype.start = function() {
     var dashboardPath = [self.dashboard_folder, dashboard + '.' + self.view_engine].join(path.sep);
     // Check for existence of dashboard and render
     fs.stat(dashboardPath, function(err, stats){
-      if (err == null) {
+      if (err === null) {
         response.render(dashboard, {
           'dashboard': dashboard,
           'request': request
         });
       }else {
         next();
-      };
+      }
     });
   });
 
@@ -184,8 +184,8 @@ Dashing.prototype.start = function() {
       if (file.match(/(\w*)\.job\.(js|coffee)$/)) {
         logger.info("Loading job file: %s", files[i]);
         require(file);
-      };
-    };
+      }
+    }
   });
 
   // Listen

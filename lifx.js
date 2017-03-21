@@ -21,7 +21,7 @@ exports.lifxControl = function(data, callback) {
     // Check allLights is iterable
     if (!allLights.forEach) {
       return;
-    };
+    }
     // All lights control
     if (data.device === ALLLIGHTSBUTTON) {
       data.state = 'on';
@@ -29,12 +29,12 @@ exports.lifxControl = function(data, callback) {
         send_event(l.device, l);
         if (l.state === 'off') {
           data.state = 'off';
-        };
+        }
       });
       send_event(data.device, data);
       if (callback && typeof(callback) === "function") {
         callback(data);
-      };
+      }
     // Single light control
     }else {
       allLights.forEach(function(l) {
@@ -42,8 +42,8 @@ exports.lifxControl = function(data, callback) {
           send_event(l.device, l);
           if (callback && typeof(callback) === "function") {
             callback(l);
-          };
-        };
+          }
+        }
       });
     };
   });

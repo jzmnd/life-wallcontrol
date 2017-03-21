@@ -7,7 +7,7 @@ function updateLights() {
     'command': 'q',
     };
   lifx.lifxControl(data);
-};
+}
 
 setInterval(updateLights, 60 * 1000);
 updateLights();

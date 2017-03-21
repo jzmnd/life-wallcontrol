@@ -1,6 +1,7 @@
 // Globals
 global.HISTORY = {};
 global.CONNECTIONS = {};
+global.VACATIONMODE = true;
 
 // Event functions
 global.send_event = function(id, body) {
@@ -11,7 +12,7 @@ global.send_event = function(id, body) {
     HISTORY[id] = event;
   for (var i in CONNECTIONS) {
     CONNECTIONS[i].send(event);
-  };
+  }
 };
 
 global.latest_events = function() {
