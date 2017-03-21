@@ -1,5 +1,9 @@
+// Globals
+global.HISTORY = {};
+global.CONNECTIONS = {};
+
 // Event functions
-send_event = function(id, body) {
+global.send_event = function(id, body) {
   body.id = id;
   body.updatedAt = Date.now();
   var event = 'data: ' + JSON.stringify(body) + '\n\n';
@@ -10,7 +14,7 @@ send_event = function(id, body) {
   };
 };
 
-latest_events = function() {
+global.latest_events = function() {
   var str = [];
   for (var id in HISTORY) {
     str.push(HISTORY[id]);

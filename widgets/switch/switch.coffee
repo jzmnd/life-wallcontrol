@@ -23,6 +23,7 @@ class Dashing.Switch extends Dashing.ClickableWidget
   @accessor 'icon-style', ->
     if @get('state') == 'on' then 'switch-icon-on' else 'switch-icon-off' 
 
+
   toggleState: ->
     newState = if @get('state') == 'on' then 'off' else 'on'
     @set 'state', newState
@@ -30,9 +31,12 @@ class Dashing.Switch extends Dashing.ClickableWidget
 
 
   queryState: ->
-    path = '/switch/' + @get('device')
-    $.get path,
-      (data) =>
+    path = '/switch/' + @get('device') + '/'
+    $.post path,
+      deviceType: 'Switch',
+      device: @get('device'),
+      command: 'q',
+      (data) ->
         @set 'state', data.state
 
 
@@ -53,3 +57,6 @@ class Dashing.Switch extends Dashing.ClickableWidget
 
   onTouchStart: (event) ->
     @postState()
+
+  #onClick: (event) ->
+  #  @postState()

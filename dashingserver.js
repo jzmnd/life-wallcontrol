@@ -1,12 +1,10 @@
 // dashingserver.js
 // Jeremy Smith
+//   Date modified 2017-03-21
 // Modified and updated from dashing-js by Fabio Caseri
 
-// Globals
-global.SCHEDULER = require('node-schedule');
-global.ROOTPATH = __dirname;
-global.HISTORY = {};
-global.CONNECTIONS = {};
+// Load global utility functions for eventsource
+require('./utils.js');
 
 // Requires
 var fs = require('fs');
@@ -20,6 +18,8 @@ var lifx = require('./lifx.js');
 module.exports.Dashing = Dashing;
 module.exports.logger = logger;
 module.exports.lifx = lifx;
+
+var ROOTPATH = __dirname;
 
 
 // Dashing class constructor
@@ -38,7 +38,7 @@ function Dashing() {
     environment: env,
   };
 
-  // Define dashing constants
+  // Define dashing constants and folder locations
   this.dashing = {
     root: ROOTPATH,
     port: process.env.PORT || 8080,
@@ -58,10 +58,8 @@ function Dashing() {
 Dashing.prototype.start = function() {
   // Build the express app
   var app = express();
-  // Localize this.dashing
+  // Localize this.dashing to self for convenience
   var self = this.dashing;
-  // Load utility functions
-  require('./utils.js');
 
   // Mincer middleware
   app.use(self.mcr.assets_prefix, mincer.createServer(self.mcr.environment));
@@ -81,7 +79,7 @@ Dashing.prototype.start = function() {
   }));
   app.use(bodyParser.json());
 
-  // Routing homepage to default
+  // Routing homepage to default dashboard
   app.get('/', function(request, response, next) {
     if (self.default_dashboard) {
       response.redirect(self.default_dashboard);
@@ -108,8 +106,8 @@ Dashing.prototype.start = function() {
     request.socket.setTimeout(0);
 
     var con = {
-      id: (new Date().getTime().toString() + Math.floor(Math.random() * 1000).toString()),
-      send: function(body) {
+      'id': (new Date().getTime().toString() + Math.floor(Math.random() * 1000).toString()),
+      'send': function(body) {
         response.write(body);
         response.flushHeaders();
       }
@@ -122,7 +120,6 @@ Dashing.prototype.start = function() {
       'Connection': 'keep-alive',
       'X-Accel-Buffering': 'no'
     });
-
     response.write('\n');
     response.write(Array(2049).join(' ') + '\n'); // 2 kB padding
     response.write(latest_events());
@@ -137,6 +134,7 @@ Dashing.prototype.start = function() {
   app.get('/:dashboard', function(request, response, next) {
     var dashboard = request.params.dashboard;
     var dashboardPath = [self.dashboard_folder, dashboard + '.' + self.view_engine].join(path.sep);
+    // Check for existence of dashboard and render
     fs.stat(dashboardPath, function(err, stats){
       if (err == null) {
         response.render(dashboard, {
@@ -155,29 +153,16 @@ Dashing.prototype.start = function() {
     response.sendFile([self.root, 'widgets', widget, widget + '.html'].join(path.sep));
   });
 
-  // GET and POST switch state
-  app.get('/switch/:device', function(request, response) {
-    var data = {
-      'device': request.params.device,
-      'command': 'q',
-    };
-    response.writeHead(200, {
-      'Content-Type': 'application/json',
-    });
-    lifx.lifxControl(data, function(light) {
-      logger.info('State queried and data received from LIFX:', data.device);
-      response.end(JSON.stringify(light));
-    });
-  });
-
+  // POST for light switches
   app.post('/switch/:device/', function(request, response) {
     var data = request.body;
     response.writeHead(200, {
       'Content-Type': 'application/json',
     });
     lifx.lifxControl(data, function(light) {
-      logger.info('Button pressed and data received from LIFX:', data.device);
-      response.end(JSON.stringify(light));
+      response.end(JSON.stringify(light), function(){
+        logger.info("Data received from LIFX:", data.command, ":", light.device, "is", light.state);
+      });
     });
   });
 

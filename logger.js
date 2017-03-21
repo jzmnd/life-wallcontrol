@@ -3,6 +3,8 @@ var path = require('path');
 var winston = require('winston');
 var expressWinston = require('express-winston');
 
+var ROOTPATH = __dirname;
+
 // Logger Middleware
 module.exports = winstonLog = new winston.Logger({
   transports: [

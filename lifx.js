@@ -3,9 +3,11 @@ var spawn = require('child_process').spawn;
 var logger = require('./logger.js');
 
 var ALLLIGHTSBUTTON = 'switchalllights';
+var ROOTPATH = __dirname;
 
 // LIFX control function
 exports.lifxControl = function(data, callback) {
+  // Spawn the .py LIFX script
   var pylifx = spawn('python', [ROOTPATH + '/lifxpyfunctions.py']);
   var allLights = {};
 
@@ -14,11 +16,13 @@ exports.lifxControl = function(data, callback) {
     allLights = JSON.parse(lights.toString());
   });
 
-  // All lights control
+  // On completion of .py LIFX script
   pylifx.stdout.on('end', function() {
+    // Check allLights is iterable
     if (!allLights.forEach) {
       return;
     };
+    // All lights control
     if (data.device === ALLLIGHTSBUTTON) {
       data.state = 'on';
       allLights.forEach(function(l) {
@@ -44,6 +48,7 @@ exports.lifxControl = function(data, callback) {
     };
   });
 
+  // Send data to the .py process as a string
   pylifx.stdin.write(JSON.stringify(data));
   pylifx.stdin.end();
 };
