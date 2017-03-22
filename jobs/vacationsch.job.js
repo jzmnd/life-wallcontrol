@@ -2,28 +2,28 @@ var lifx = require('../lifx.js');
 var logger = require('../logger.js');
 var schedule = require('node-schedule');
 
-var timeVar = 0;
+var timeVar = 10;
 var jobs = {};
 
 var times = {
   'timeAMon': {
-    'hour': 16,
-    'minute': 48,
+    'hour': 19,
+    'minute': 10,
     'state': 'on'
   },
   'timeAMoff': {
-    'hour': 16,
-    'minute': 32,
+    'hour': 22,
+    'minute': 45,
     'state': 'off'
   },
   'timePMon': {
-    'hour': 16,
-    'minute': 33,
+    'hour': 7,
+    'minute': 0,
     'state': 'on'
   },
   'timePMoff': {
-    'hour': 16,
-    'minute': 34,
+    'hour': 7,
+    'minute': 30,
     'state': 'off'
   },
 };

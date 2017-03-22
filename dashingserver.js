@@ -3,7 +3,7 @@
 // - Date modified 2017-03-21
 // Modified and updated from dashing-js by Fabio Caseri
 
-// Load global utility functions for eventsource
+// Load global utility functions
 require('./utils.js');
 
 // Requires
